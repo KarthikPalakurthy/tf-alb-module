@@ -24,3 +24,16 @@ resource "aws_security_group" "alb" {
     { Name = "${var.env}-alb-security-group"}
   )
 }
+
+resource "aws_lb" "test" {
+  name               = "${var.env}-alb-${var.subnet_name}-alb"
+  internal           = var.internal
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = var.subnet_ids
+
+
+  tags = merge(
+    local.common_tags,
+    { Name = "${var.env}-alb"}
+  )
+}
