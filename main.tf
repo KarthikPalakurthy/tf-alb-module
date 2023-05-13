@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb" {
 
-  name        = "${var.env}-alb-${var.subnet_name}security-group"
+  name        = "${var.env}-${var.subnet_name}security-group"
   description = "${var.env}-alb-security-group"
   vpc_id      = var.vpc_id
 
@@ -26,7 +26,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_lb" "test" {
-  name               = "${var.env}-alb-${var.subnet_name}-alb"
+  name               = "${var.env}-${var.subnet_name}-alb"
   internal           = var.internal
   security_groups    = [aws_security_group.alb.id]
   subnets            = var.subnet_ids
