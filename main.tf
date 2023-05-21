@@ -38,22 +38,10 @@ resource "aws_lb" "test" {
   )
 }
 
-resource "aws_lb" "load_balancer" {
-  name               = "${var.env}-${var.subnet_name}-alb"
-  internal           = var.internal
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = var.subnet_ids
-
-  tags = merge(
-    local.common_tags,
-    { Name = "${var.env}-${var.subnet_name}-alb" }
-  )
-}
 
 resource "aws_lb_listener" "backend" {
   count = var.internal ? 1 : 0
-  load_balancer_arn = aws_lb.load_balancer.arn
+  load_balancer_arn = aws_lb.test.arn
   port              = "80"
   protocol          = "HTTP"
 
