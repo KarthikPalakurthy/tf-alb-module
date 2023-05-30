@@ -11,6 +11,13 @@ resource "aws_security_group" "alb" {
     protocol         = "tcp"
     cidr_blocks      = var.allow_cidr_blocks
   }
+  ingress {
+    description      = "HTTPS"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = var.allow_cidr_blocks
+  }
 
   egress {
     from_port        = 0
@@ -45,6 +52,7 @@ resource "aws_lb_listener" "backend" {
   port              = "80"
   protocol          = "HTTP"
 
+
   default_action {
     type = "fixed-response"
 
@@ -54,4 +62,13 @@ resource "aws_lb_listener" "backend" {
       status_code  = "502"
     }
   }
+}
+
+resource "aws_route53_record" "public_lb" {
+  count = var.internal ? 0 : 1
+  zone_id = "Z0636942108K930OU3P3D"
+  name    = var.dns_domain
+  type    = "CNAME"
+  ttl     = 30
+  records = [aws_lb.test.dns_name]
 }
